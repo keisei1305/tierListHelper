@@ -3,29 +3,25 @@ const createContextMenu = ()=>{
     wrapper.setAttribute('class','cmWrapper')
     let list = document.createElement("ul")
     list.setAttribute('class','menu')
-
-    let rows = document.getElementsByClassName("tier-row")
-    for(let i=0; i<rows.length; i++){
-        let itemList = document.createElement("li")
-        let itemSpan = document.createElement("span")
-
-        itemList.setAttribute('class','item')
-        itemSpan.innerText = rows.item(i).children.item(0).children.item(0).innerText;
-
-        itemList.addEventListener('click', ()=>{
-            addImageToListRow(rows.item(i),lastChild);
-        })
-
-        itemList.appendChild(itemSpan)
-        list.appendChild(itemList)
-    }
-    wrapper.appendChild(list)
+    wrapper.appendChild(list);
     document.getElementsByTagName("body").item(0).appendChild(wrapper)
 }
 
 const addImageToListRow = (rowNode, character) => {
     character.parentElement.removeChild(character)
-    rowNode.children.item(1).appendChild(character)
+    rowNode.appendChild(character)
+}
+
+const appendCarousel = () =>{
+    let itemList = document.createElement("li")
+    let itemSpan = document.createElement("span")
+    itemList.setAttribute('class','item')
+    itemSpan.innerText = "Не выбрано";
+    itemList.addEventListener('click', ()=>{
+        addImageToListRow(carousel,lastChild);
+    })
+    itemList.appendChild(itemSpan);
+    list.appendChild(itemList);
 }
 
 const updateContextMenu = () =>{
@@ -39,12 +35,13 @@ const updateContextMenu = () =>{
         itemSpan.innerText = rows.item(i).children.item(0).children.item(0).innerText;
 
         itemList.addEventListener('click', ()=>{
-            addImageToListRow(rows.item(i),lastChild);
+            addImageToListRow(rows.item(i).children.item(1),lastChild);
         })
 
         itemList.appendChild(itemSpan)
         list.appendChild(itemList)
     }
+    appendCarousel();
 }
 
 const bodyGetStyles = ()=>{
@@ -93,10 +90,11 @@ bodyGetStyles()
 createContextMenu()
 const contextMenu = document.querySelector(".cmWrapper")
 const list = contextMenu.children.item(0)
-const carousel = document.querySelector("#create-image-carousel")
+const carousel = document.getElementById("create-image-carousel")
 
 let characters = document.getElementsByClassName("character")
 let lastChild;
+updateContextMenu()
 
 for(let i=0; i<characters.length; i++){
     characters.item(i).addEventListener("contextmenu", event=>{
