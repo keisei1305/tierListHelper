@@ -1,0 +1,35 @@
+{
+  "manifest_version": 3,
+
+  "name": "Context Menu for TierList",
+  "description": "You can call context menu on tiermaker.com",
+  "version": "1.0",
+  "icons": {
+    "32": "icons/icon-32.png",
+    "64":"icons/icon-64.png"
+  },
+
+  "content_scripts": [
+    {
+      "js": ["js/contextMenu.js"],
+      "matches": [
+        "https://tiermaker.com/create/*"
+      ],
+      "run_at": "document_idle"
+    }
+  ],
+  "permissions": [
+    "tabs",
+    "activeTab",
+    "scripting",
+    "storage",
+    "alarms",
+    "notifications"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
+  "background": {
+    "service_worker": "js/background.js"
+  }
+}
