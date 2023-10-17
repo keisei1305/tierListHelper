@@ -92,11 +92,10 @@ for(let i=0; i<characters.length; i++){
             winHeight = window.innerHeight,
             cmHeight = contextMenu.offsetHeight;
 
-        x= x>winWidth-cmWidth?winWidth-cmWidth:x;
-        y = y>winHeight - cmHeight? winHeight - cmHeight:y;
+        x = x>winWidth-cmWidth?winWidth-cmWidth:x;
 
         contextMenu.style.left =`${x}px`;
-        contextMenu.style.top =`${y}px`;
+        contextMenu.style.top =`${y + document.body.scrollTop}px`;
         contextMenu.style.visibility = "visible";
     })
 }
