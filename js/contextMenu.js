@@ -1,5 +1,4 @@
 const createContextMenu = ()=>{
-    console.log("ContextMenuCreating...");
     let wrapper = document.createElement("div")
     wrapper.setAttribute('class','cmWrapper')
     let list = document.createElement("ul")
@@ -8,12 +7,25 @@ const createContextMenu = ()=>{
     let rows = document.getElementsByClassName("tier-row")
     for(let i=0; i<rows.length; i++){
         let itemList = document.createElement("li")
+        let itemSpan = document.createElement("span")
+
         itemList.setAttribute('class','item')
+        itemSpan.innerText = rows.item(i).children.item(0).children.item(0).innerText;
+
+        itemList.addEventListener('click', ()=>{
+            addImageToListRow(rows.item(i),lastChild);
+        })
+
+        itemList.appendChild(itemSpan)
         list.appendChild(itemList)
     }
-
     wrapper.appendChild(list)
     document.getElementsByTagName("body").item(0).appendChild(wrapper)
+}
+
+const addImageToListRow = (rowNode, character) => {
+    character.parentElement.removeChild(character)
+    rowNode.children.item(1).appendChild(character)
 }
 
 const updateContextMenu = () =>{
@@ -24,7 +36,12 @@ const updateContextMenu = () =>{
         let itemSpan = document.createElement("span")
 
         itemList.setAttribute('class','item')
-        itemSpan.innerText = rows.item(i).children.item(0).children.item(0).innerText
+        itemSpan.innerText = rows.item(i).children.item(0).children.item(0).innerText;
+
+        itemList.addEventListener('click', ()=>{
+            addImageToListRow(rows.item(i),lastChild);
+        })
+
         itemList.appendChild(itemSpan)
         list.appendChild(itemList)
     }
@@ -70,28 +87,43 @@ const bodyGetStyles = ()=>{
     document.querySelector('body').appendChild(style)
 }
 
+setTimeout(()=>{},2000)
+
 bodyGetStyles()
 createContextMenu()
 const contextMenu = document.querySelector(".cmWrapper")
 const list = contextMenu.children.item(0)
+const carousel = document.querySelector("#create-image-carousel")
+
 let characters = document.getElementsByClassName("character")
+let lastChild;
 
 for(let i=0; i<characters.length; i++){
     characters.item(i).addEventListener("contextmenu", event=>{
         event.preventDefault();
+        lastChild = event.target;
         let x = event.pageX, y = event.pageY,
             winWidth = window.innerWidth,
             cmWidth = contextMenu.offsetWidth,
             winHeight = window.innerHeight,
             cmHeight = contextMenu.offsetHeight;
 
-        x= x>winWidth-cmWidth?winWidth-cmWidth:x;
-        y = y>winHeight - cmHeight? winHeight - cmHeight:y;
+        x = x>winWidth-cmWidth?winWidth-cmWidth:x;
 
         contextMenu.style.left =`${x}px`;
-        contextMenu.style.top =`${y}px`;
+        contextMenu.style.top =`${y + document.body.scrollTop}px`;
         contextMenu.style.visibility = "visible";
     })
 }
 
 document.addEventListener("click", ()=>contextMenu.style.visibility="hidden")
+
+document.addEventListener('click',event =>{
+    if (event.target.id==="delete-row"
+        || event.target.parentElement.classList.contains("move-buttons")
+        || event.target.id==="add-row-up"
+        ||event.target.id==="add-row-below") {
+        console.log(event.target)
+        updateContextMenu();
+    }
+})
