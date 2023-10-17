@@ -94,7 +94,6 @@ const bodyGetStyles = ()=>{
     document.querySelector('body').appendChild(style)
 }
 
-setTimeout(()=>{},2000)
 
 bodyGetStyles()
 createContextMenu()
@@ -138,7 +137,6 @@ for(let i=0; i<characters.length; i++){
                     currentCharacters.add(currentCharacter);
                     currentCharacter.style.opacity = "0.6";
                 }
-
                 break;
         }
     })
