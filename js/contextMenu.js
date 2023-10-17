@@ -8,12 +8,18 @@ const createContextMenu = ()=>{
     let rows = document.getElementsByClassName("tier-row")
     for(let i=0; i<rows.length; i++){
         let itemList = document.createElement("li")
+        let itemSpan = document.createElement("span")
+
         itemList.setAttribute('class','item')
+        itemSpan.innerText = rows.item(i).children.item(0).children.item(0).innerText;
+
+        itemList.appendChild(itemSpan)
         list.appendChild(itemList)
     }
 
     wrapper.appendChild(list)
     document.getElementsByTagName("body").item(0).appendChild(wrapper)
+    console.log("ContextMenuCreated")
 }
 
 const updateContextMenu = () =>{
@@ -24,7 +30,8 @@ const updateContextMenu = () =>{
         let itemSpan = document.createElement("span")
 
         itemList.setAttribute('class','item')
-        itemSpan.innerText = rows.item(i).children.item(0).children.item(0).innerText
+        itemSpan.innerText = rows.item(i).children.item(0).children.item(0).innerText;
+
         itemList.appendChild(itemSpan)
         list.appendChild(itemList)
     }
