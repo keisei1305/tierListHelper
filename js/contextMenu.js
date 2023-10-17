@@ -37,8 +37,9 @@ const updateContextMenu = () =>{
 
         itemList.setAttribute('class','item')
         itemSpan.innerText = rows.item(i).children.item(0).children.item(0).innerText;
-        itemSpan.addEventListener('click',()=>{
 
+        itemList.addEventListener('click', ()=>{
+            addImageToListRow(rows.item(i),lastChild);
         })
 
         itemList.appendChild(itemSpan)
@@ -116,3 +117,13 @@ for(let i=0; i<characters.length; i++){
 }
 
 document.addEventListener("click", ()=>contextMenu.style.visibility="hidden")
+
+document.addEventListener('click',event =>{
+    if (event.target.id==="delete-row"
+        || event.target.parentElement.classList.contains("move-buttons")
+        || event.target.id==="add-row-up"
+        ||event.target.id==="add-row-below") {
+        console.log(event.target)
+        updateContextMenu();
+    }
+})
