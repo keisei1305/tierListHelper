@@ -18,7 +18,12 @@ const appendCarousel = () =>{
     itemList.setAttribute('class','item')
     itemSpan.innerText = "Не выбрано";
     itemList.addEventListener('click', ()=>{
-        addImageToListRow(carousel,lastChild);
+        if (currentCharacters.size!==0){
+            for(let item of currentCharacters){
+                addImageToListRow(carousel,item);
+            }
+        }
+        else addImageToListRow(carousel,lastChild);
     })
     itemList.appendChild(itemSpan);
     list.appendChild(itemList);
@@ -35,7 +40,12 @@ const updateContextMenu = () =>{
         itemSpan.innerText = rows.item(i).children.item(0).children.item(0).innerText;
 
         itemList.addEventListener('click', ()=>{
-            addImageToListRow(rows.item(i).children.item(1),lastChild);
+            if (currentCharacters.size!==0){
+                for(let item of currentCharacters){
+                    addImageToListRow(rows.item(i).children.item(1),item);
+                }
+            }
+            else addImageToListRow(rows.item(i).children.item(1),lastChild);
         })
 
         itemList.appendChild(itemSpan)
@@ -91,8 +101,11 @@ createContextMenu()
 const contextMenu = document.querySelector(".cmWrapper")
 const list = contextMenu.children.item(0)
 const carousel = document.getElementById("create-image-carousel")
+const currentCharacters = new Set();
+let shiftIsPressed = false;
 
-let characters = document.getElementsByClassName("character")
+let characters = document.getElementsByClassName("character");
+let currentCharacter;
 let lastChild;
 updateContextMenu()
 
@@ -111,10 +124,35 @@ for(let i=0; i<characters.length; i++){
         contextMenu.style.left =`${x}px`;
         contextMenu.style.top =`${y + document.body.scrollTop}px`;
         contextMenu.style.visibility = "visible";
+    });
+    characters.item(i).addEventListener('mousedown', event=>{
+        switch (event.button){
+            case 0:
+                if (shiftIsPressed === false) return;
+                currentCharacter = event.target;
+                if (currentCharacters.has(currentCharacter)){
+                    currentCharacters.delete(currentCharacter);
+                    currentCharacter.style.opacity = "1";
+                }
+                else{
+                    currentCharacters.add(currentCharacter);
+                    currentCharacter.style.opacity = "0.6";
+                }
+
+                break;
+        }
     })
 }
 
-document.addEventListener("click", ()=>contextMenu.style.visibility="hidden")
+document.addEventListener("click", ()=>{
+    contextMenu.style.visibility="hidden";
+    if (shiftIsPressed === false){
+        for (let item of currentCharacters){
+            item.style.opacity ="1";
+        }
+        currentCharacters.clear();
+    }
+})
 
 document.addEventListener('click',event =>{
     if (event.target.id==="delete-row"
@@ -123,5 +161,17 @@ document.addEventListener('click',event =>{
         ||event.target.id==="add-row-below") {
         console.log(event.target)
         updateContextMenu();
+    }
+})
+document.addEventListener('keydown', event =>{
+    if (event.keyCode === 16){
+        shiftIsPressed = true;
+        event.preventDefault();
+    }
+})
+document.addEventListener('keyup', event =>{
+    if (event.keyCode === 16){
+        shiftIsPressed = false;
+        event.preventDefault();
     }
 })
